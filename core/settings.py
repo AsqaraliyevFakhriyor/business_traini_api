@@ -8,14 +8,14 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = Env()
-env.read_env(os.path.join(BASE_DIR, '.env'))
+ENV = Env()
+ENV.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = ENV.str('SECRET_KEY')
 
-DEBUG = env.bool("DEBUG", False)
+DEBUG = ENV.bool("DEBUG", False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ENV.list('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'users',
     'main',
 ]
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,19 +62,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# Database
+
 
 DATABASES = {
     'default': {
-        'ENGINE': env.str('DB_TYPE'),
-        'NAME': env.str('DB_NAME'),
-        'USER': env.str("DB_USER"),
-        'PASSWORD': env.str('DB_PASSWORD')
+        'ENGINE': ENV.str('DB_TYPE'),
+        'NAME': ENV.str('DB_NAME'),
+        'USER': ENV.str("DB_USER"),
+        'PASSWORD': ENV.str('DB_PASSWORD')
     }
 }
 
 
-# Password validation
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -90,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# General settings section
 
 LANGUAGE_CODE = 'en-us'
 
@@ -100,13 +102,19 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
-
-# Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
+
+
+# Cors settings
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # DEFINDING CUSTOM AUTH MODEL
 
 AUTH_USER_MODEL = "users.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
