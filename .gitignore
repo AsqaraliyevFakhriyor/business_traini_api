@@ -1,0 +1,13 @@
+__pycache__
+
+# environmental variables
+.env
+
+# venv
+venv
+
+# Extensions
+.vscode
+
+# Databases 
+db.sqlite3
