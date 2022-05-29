@@ -1,0 +1,61 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "applications_coll",
+    "dateExported": "2022-05-29T23:03:12.632Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "6581e665-e673-40c8-bcbc-4e51da62bc1e",
+            "colId": "0e6bb9be-685b-4d4b-91ea-61f15684faf0",
+            "containerId": "",
+            "name": "applications_list",
+            "url": "127.0.0.1:8000/api/applications",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2022-05-29T15:35:09.274Z",
+            "modified": "2022-05-29T22:04:00.287Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a3853cae-fb90-44c0-95e8-00dcf7f8d460",
+            "colId": "0e6bb9be-685b-4d4b-91ea-61f15684faf0",
+            "containerId": "",
+            "name": "application_delete",
+            "url": "127.0.0.1:8000/api/delete/application",
+            "method": "DELETE",
+            "sortNum": 30000,
+            "created": "2022-05-29T15:35:43.924Z",
+            "modified": "2022-05-29T22:58:50.408Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"application_id\": 7\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c0665100-4950-449a-b438-3f9b61313bad",
+            "colId": "0e6bb9be-685b-4d4b-91ea-61f15684faf0",
+            "containerId": "",
+            "name": "application_create",
+            "url": "127.0.0.1:8000/api/create/application",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2022-05-29T15:35:55.425Z",
+            "modified": "2022-05-29T22:59:32.795Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"username\": \"test7\",\n    \"email\": \"test7@gmail.com\",\n    \"phone_number\": \"+9989778546\",\n    \"business_type\": \"testing7 business\"\n}",
+                "form": []
+            },
+            "tests": []
+        }
+    ]
+}
