@@ -1,50 +1,86 @@
-from multiprocessing import AuthenticationError
-import jwt
-
-from .models import ApplicationModel
+import sys
 
 from django.conf import settings
 from django.contrib.auth.models import User
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.exceptions import PermissionDenied
+
+from users.utilities import check_token
 from users.serializers import UserSerializer
+
+from .models import ApplicationModel
 
 from .serializer import ApplicationSerializer
 
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
-from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
+# CONFIGS
+settings.SECRET
+settings.ALGORITHM
 
 
-ENV = settings.ENV
-
-@api_view()
+@api_view(['GET', ])
 def application_list(request):
+    """Endpoint to get list of all applications"""
+
     applications = ApplicationModel.objects.all()
-    serializer = ApplicationSerializer(applications, many=True, context= {"request": request})
+    serializer = ApplicationSerializer(
+        applications, many=True, context={"request": request})
 
-    token = request.COOKIES.get("token")
+    payload = check_token(settings.SECRET, settings.ALGORITHM, request)
 
-    if not token:
-        raise AuthenticationFailed("unauthenticated")
+    user = User.objects.filter(id=payload['id']).first()
+    if not user.is_staff:
+        raise PermissionDenied("Permission needed")
 
-    try:
-        payload = jwt.decode(token, ENV.str("SECRET"), algorithms=[ ENV.str("ALGORITHM")])
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationFailed("token expired")
-    finally:
-        user = User.objects.filter(id=payload['id']).first()
-        if not user.is_staff:
-            raise PermissionDenied("Permission needed")
-            
-        userserializer = UserSerializer(user)
+    userserializer = UserSerializer(user)
 
     return Response(
         {
-        "status_code": 200,
-        "success": True,
-        "applications": serializer.data,
-        "user": userserializer.data,
-        },
-        HTTP_200_OK
+            "status_code": status.HTTP_200_OK,
+            "applications": serializer.data,
+            "user": userserializer.data,
+        }
     )
+
+
+@api_view(["POST", ])
+def application_create(request):
+    """Endpoint to create new applications and store to database"""
+
+    serializer = ApplicationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(
+        {
+            "status_code": status.HTTP_200_OK,
+            "application": serializer.data,
+        }
+    )
+
+
+@api_view(["DELETE", ])
+def application_delete(request):
+    """Endpoint to delete specific application"""
+
+    payload = check_token(settings.SECRET, settings.ALGORITHM, request)
+    user = User.objects.filter(id=payload['id']).first()
+
+    if not user.is_staff:
+        raise PermissionDenied("Permission needed")
+
+    application_id = request.data['application_id']
+    try:
+        ApplicationModel.objects.get(id=application_id).delete()
+
+        return Response(
+            {
+                "status_code": status.HTTP_200_OK,
+                "application_id": application_id,
+            }
+        )
+
+    except Exception as e:
+        print(sys.exc_info())
+        print("e: ", e)
