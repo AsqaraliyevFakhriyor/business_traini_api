@@ -4,32 +4,31 @@ import jwt
 
 import datetime
 
-
-from .serializers import UserSerializer
-
 from django.conf import settings
 from django.contrib.auth.models import User
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 
-ENV = settings.ENV
+from .serializers import UserSerializer
+
+from .utilities import check_token
+
 
 class RegisterView(APIView):
-     def post(self, request):
-         serializer = UserSerializer(data=request.data)
-         serializer.is_valid(raise_exception=True)
-         serializer.save()
-         return Response(
-             {
-             "status_code": 200,
-             "user_data": serializer.data,
-             "description": "successfully authenticated"
-            }, HTTP_200_OK
-         )
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {
+                "status_code": status.HTTP_200_OK,
+                "user_data": serializer.data,
+            }
+        )
 
 
 class LoginView(APIView):
@@ -52,16 +51,15 @@ class LoginView(APIView):
             "iat": datetime.datetime.utcnow()
         }
 
-        token = jwt.encode(payload, ENV.str("SECRET"), algorithm=ENV.str("ALGORITHM"))
+        token = jwt.encode(payload, settings.SECRET,
+                           algorithm=settings.ALGORITHM)
 
         response = Response()
         response.set_cookie(key="token", value=token, httponly=True)
 
-        response.data ={
-            "status_code": 200,
-            "description": "successfully logged in"
-        }, HTTP_200_OK
-
+        response.data = {
+            "status_code": status.HTTP_200_OK,
+        }
 
         return response
 
@@ -69,26 +67,18 @@ class LoginView(APIView):
 class UserDataView(APIView):
 
     def get(self, request):
-        token = request.COOKIES.get("token")
+        payload = check_token(settings.SECRET, settings.ALGORITHM, request)
 
-        if not token:
-            raise AuthenticationFailed("unauthenticated")
-
-        try:
-            payload = jwt.decode(token, ENV.str("SECRET"), algorithms=[ENV.str("ALGORITHM"),])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("token expired")
-        finally:
-            user = User.objects.filter(id=payload['id']).first()
-            serializer = UserSerializer(user)
+        user = User.objects.filter(id=payload['id']).first()
+        serializer = UserSerializer(user)
 
         return Response(
             {
-            "status_code": 200,
-            "user_data": serializer.data,
-            },
-            HTTP_200_OK
+                "status_code": status.HTTP_200_OK,
+                "user_data": serializer.data,
+            }
         )
+
 
 class LogoutView(APIView):
 
@@ -96,14 +86,14 @@ class LogoutView(APIView):
         response = Response()
         try:
             response.delete_cookie("token")
+
+            response.data = {
+                "status_code": status.HTTP_200_OK,
+            }
+
         except Exception as e:
             print(sys.exc_info())
             print(e)
             raise AuthenticationFailed("unauthenticated")
-        finally:
-            response.data = {
-                "status_code": 200,
-                "description": "successfully loged out"
-            }, HTTP_200_OK
 
         return response
