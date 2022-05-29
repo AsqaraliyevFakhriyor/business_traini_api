@@ -5,17 +5,25 @@ from environ import Env
 from pathlib import Path
 
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = Env()
 ENV.read_env(os.path.join(BASE_DIR, '.env'))
+
+# DJANGO CREDENTIALS
 
 SECRET_KEY = ENV.str('SECRET_KEY')
 
 DEBUG = ENV.bool("DEBUG", False)
 
 ALLOWED_HOSTS = ENV.list('ALLOWED_HOSTS')
+
+
+# JWT CREDENTIALS
+
+SECRET = ENV.str("SECRET")
+
+ALGORITHM = ENV.str('ALGORITHM')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,8 +70,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': ENV.str('DB_TYPE'),
@@ -72,8 +78,6 @@ DATABASES = {
         'PASSWORD': ENV.str('DB_PASSWORD')
     }
 }
-
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -112,8 +116,6 @@ STATIC_URL = '/static/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-# DEFINDING CUSTOM AUTH MODEL
 
 # AUTH_USER_MODEL = "users.User"
 
