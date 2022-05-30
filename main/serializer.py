@@ -9,6 +9,7 @@ class ApplicationSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=200)
     phone_number = serializers.CharField(max_length=200)
     business_type = serializers.CharField(max_length=200)
+    contacted = serializers.BooleanField()
 
     def create(self, validated_data):
         return Apps.objects.create(**validated_data)

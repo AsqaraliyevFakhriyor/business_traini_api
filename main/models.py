@@ -7,7 +7,7 @@ class ApplicationModel(models.Model):
     email = models.CharField(max_length=200)
     business_type = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
-    visited = models.BooleanField(default=False)
+    contacted = models.BooleanField(default=False)
 
     class Meta:
         ordering = ("-created",)
