@@ -93,3 +93,36 @@ def application_delete(request):
     except Exception as e:
         print(sys.exc_info())
         print("e: ", e)
+
+
+@api_view(["POST", ])
+def application_contacted(request):
+    """Endpoint to change contacted field in ApplicationModel"""
+
+    payload = check_token(settings.SECRET, settings.ALGORITHM, request)
+    user = User.objects.filter(id=payload['id']).first()
+
+    if not user.is_staff:
+        raise PermissionDenied("Permission needed")
+
+    application_id = request.data['application_id']
+    try:
+        application = ApplicationModel.objects.get(id=application_id)
+        if application.contacted:
+            application.contacted = False
+        else:
+            application.contacted = True
+        application.save()
+
+        return Response(
+            {
+                "status_code": status.HTTP_200_OK,
+                "application_id": application_id,
+            }
+        )
+
+    except Exception as e:
+        print(sys.exc_info())
+        print("e: ", e)
+
+
