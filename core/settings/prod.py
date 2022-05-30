@@ -9,18 +9,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # DJANGO CREDENTIALS
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ['SECRET_KEY']
 
-DEBUG = os.environ.get("DEBUG", False)
+DEBUG = os.environ["DEBUG", False]
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
+ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS']
 
 
 # JWT CREDENTIALS
 
-SECRET = os.environ.get("SECRET")
+SECRET = os.environ["SECRET"]
 
-ALGORITHM = os.environ.get('ALGORITHM')
+ALGORITHM = os.environ['ALGORITHM']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -71,12 +71,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_TYPE'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        "HOST": os.environ.get("HOST"),
-        "PORT": os.environ.get("PORT")
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ["DB_USER"],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        "HOST": os.environ["HOST"],
+        "PORT": 5432
     }
 }
 
