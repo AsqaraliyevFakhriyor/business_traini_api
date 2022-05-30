@@ -1,13 +1,13 @@
-export SECRET_KEY="thisissecretkeyok?"
-export DEBUG=False
+export SECRET_KEY="<SECRET_KEY>"
+export DEBUG="<DEBUG>"
 export ALLOWED_HOSTS=["127.0.0.1,localhost",".herokuapp.com"]
 
-export SECRET="THISISJUSTSECRET"
-export ALGORITHM="HS256"
+export SECRET="<SECRET>"
+export ALGORITHM="<ALGORITHM>"
 
 export DB_TYPE="django.db.backends.postgresql"
-export DB_NAME="dhacam6vq4pmk"
-export DB_USER="yrsfcsuaofhpdt"
-export DB_PASSWORD="947572e7289c30b55392f212f6b89f6f91c6d0a278986b94b878ef6edc40e39f"
-export HOST="ec2-52-204-195-41.compute-1.amazonaws.com"
-export PORT=5432
+export DB_NAME="<DATABASE NAME>"
+export DB_USER="<DATABASE USER>"
+export DB_PASSWORD="<DATABASE PASSWORD>"
+export HOST="<HOST>"
+export PORT="<PORT>"
