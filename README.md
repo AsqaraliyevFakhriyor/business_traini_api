@@ -1,4 +1,4 @@
-## Business API for [FRONT-END ↗️](www.alisherisayev.netlify.app)
+## Business API for www.alisherisayev.netlify.app
 
 ### This project was maded only for learning purposes!😉
 
