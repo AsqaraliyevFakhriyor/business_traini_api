@@ -3,7 +3,7 @@
 ### This project was maded only for learning purposes!😉
 
 ### Project deployed on heroku
-> [`business_traini_api.com`](https://alisherisayev.herokuapp.com)
+> https://alisherisayev.herokuapp.com
 
 ## Models:
 1. User's model with `username`, `email`, `password` etc.
