@@ -1,6 +1,7 @@
 import sys
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from rest_framework import status
@@ -18,6 +19,14 @@ from .serializer import ApplicationSerializer
 # CONFIGS
 settings.SECRET
 settings.ALGORITHM
+
+
+def home(request):
+    return HttpResponse(
+        """<h3>API is working 😁</h3>
+        <p>You can download  the project and run it locally 👋</p>
+        <a href="https://github.com/AsqaraliyevFakhriyor/business_traini_api/">API Docs and Source code</a>"""
+        )
 
 
 @api_view(['GET', ])

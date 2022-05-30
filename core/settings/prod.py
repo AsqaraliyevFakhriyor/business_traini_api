@@ -5,25 +5,22 @@ from environ import Env
 from pathlib import Path
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-ENV = Env()
-ENV.read_env(os.path.join(BASE_DIR, '.env'))
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # DJANGO CREDENTIALS
 
-SECRET_KEY = ENV.str('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = ENV.bool("DEBUG", False)
+DEBUG = os.environ.get("DEBUG", False)
 
-ALLOWED_HOSTS = ENV.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
 
 
 # JWT CREDENTIALS
 
-SECRET = ENV.str("SECRET")
+SECRET = os.environ.get("SECRET")
 
-ALGORITHM = ENV.str('ALGORITHM')
+ALGORITHM = os.environ.get('ALGORITHM')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
@@ -41,6 +39,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,10 +71,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': ENV.str('DB_TYPE'),
-        'NAME': ENV.str('DB_NAME'),
-        'USER': ENV.str("DB_USER"),
-        'PASSWORD': ENV.str('DB_PASSWORD')
+        'ENGINE': os.environ.get('DB_TYPE'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        "HOST": os.environ.get("HOST"),
+        "PORT": os.environ.get("PORT")
     }
 }
 
@@ -110,7 +111,8 @@ USE_TZ = False
 
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Cors settings
 
