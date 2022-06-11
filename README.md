@@ -9,7 +9,7 @@
 1. User's model with `username`, `email`, `password` etc.
 2. Application's model with columns `username`, `email`, `phone_number`, `business_type`
 
-## >! Make sure that you have a superuser in django before sending requests otherwise some endpoints will return **``403 Permission denied``**
+> ## ! Make sure that you have a superuser in django before sending requests otherwise some endpoints will return **``403 Permission denied``**
 
 ## Endpoinds: 🍔
 1. **`POST`** ***/api/register***
